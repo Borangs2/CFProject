@@ -14,11 +14,7 @@ namespace CFProject.Models
 
         [Column(TypeName = "nvarchar(20)")]
         [Required(ErrorMessage = "First name missing")]
-        public string FirstName { get; set; }
-
-        [Column(TypeName = "nvarchar(20)")]
-        [Required(ErrorMessage = "Last name missing")]
-        public string LastName { get; set; }
+        public string Name { get; set; }
 
         [Column(TypeName = "nvarchar(100)")]
         [Required(ErrorMessage = "Password missing")]

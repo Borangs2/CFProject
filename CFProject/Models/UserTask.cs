@@ -12,8 +12,8 @@ namespace CFProject.Models
         [ForeignKey("User"), Required(ErrorMessage = "This field must be filled")]
         public int UserId { get; set; }
         public virtual User User { get; set; }
-        [ForeignKey("Task"), Required(ErrorMessage = "This field must be filled")]
+        [ForeignKey("Project"), Required(ErrorMessage = "This field must be filled")]
         public int TaskId { get; set; }
-        public virtual Task Task { get; set; }
+        public virtual Project Project { get; set; }
     }
 }

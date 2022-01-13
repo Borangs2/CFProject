@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CFProject.Models
 {
-    public class Task
+    public class Project
     {
         [Key]
         public int TaskId { get; set; }

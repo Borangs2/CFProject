@@ -18,7 +18,7 @@ namespace CFProject.Models
 
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<Task> Task { get; set; }
+        public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<UserTask> UserTask { get; set; }
         public virtual DbSet<Company> Company { get; set; }
         
