@@ -13,11 +13,11 @@ namespace CFProject.Models
         public int UserId { get; set; }
 
         [Column(TypeName = "nvarchar(20)")]
-        [Required(ErrorMessage = "First name missing")]
+        [Required(ErrorMessage = "Name invalid")]
         public string Name { get; set; }
 
         [Column(TypeName = "nvarchar(100)")]
-        [Required(ErrorMessage = "Password missing")]
+        [Required(ErrorMessage = "Password invlaid")]
         public string Password { get; set; }
 
         [ForeignKey("Manager")]

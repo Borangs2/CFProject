@@ -4,35 +4,35 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Login</h1>
 
 <h4>User</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        @if (TempData["Login"] != null && (string)TempData["Login"] == "NotFound")
+        {
+            <div class="alert alert-danger">
+                Incorrect username or password
+            </div>
+        }
+        <form asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+            <div>
+                <label asp-for="Name">Username: </label>
+                <input asp-for="Name" type="text" class="form-control" name="Name" autocomplete="off">
                 <span asp-validation-for="Name" class="text-danger"></span>
+
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
+            <div>
+                <label asp-for="Password">Password: </label>
+                <input asp-for="Password" type="password" class="form-control" name="Password" autocomplete="off">
                 <span asp-validation-for="Password" class="text-danger"></span>
+
             </div>
-            <div class="form-group">
-                <label asp-for="ManagerId" class="control-label"></label>
-                <select asp-for="ManagerId" class ="form-control" asp-items="ViewBag.ManagerId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="RoleId" class="control-label"></label>
-                <select asp-for="RoleId" class ="form-control" asp-items="ViewBag.RoleId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+
+            <button type="submit" class="btn btn-primary mt-1">Login</button>
+
         </form>
     </div>
 </div>

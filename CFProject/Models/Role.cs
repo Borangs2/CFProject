@@ -9,6 +9,15 @@ namespace CFProject.Models
 {
     public class Role
     {
+        /*
+         Roles:
+        1: Programmer
+        2: Manager - Able to create new tasks and link users to them
+        3: Admin - Manager + able to add new users
+         */
+
+
+
         [Key]
         public int RoleId { get; set; }
         [Column(TypeName = "nvarchar(20)")] 
