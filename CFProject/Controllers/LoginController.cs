@@ -52,12 +52,7 @@ namespace CFProject.Controllers
 
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("UserId");
-            HttpContext.Session.Remove("Username");
-            if (HttpContext.Session.GetInt32("UserIsAdmin") != null)
-            {
-                HttpContext.Session.Remove("UserIsAdmin");
-            }
+            HttpContext.Session.Clear();
             TempData["Logout"] = "Success";
             return RedirectToAction("Index", "Home");
         }
