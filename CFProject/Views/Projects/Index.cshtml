@@ -10,7 +10,7 @@
 @if (Context.Session.GetInt32("UserRoleId") != null && Context.Session.GetInt32("UserRoleId") > 1)
 {
     <div class="btn btn-outline-info">
-        <a asp-action="Create">Create New</a>
+        <a class="text-info text-decoration-none" asp-action="Create">Create New</a>
     </div>
 }
 
@@ -37,16 +37,20 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
-                <td>
+                <td class="w-50">
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Company.Name)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.TaskId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.TaskId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.TaskId">Delete</a>
+                    <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.TaskId">Details</a>
+
+                    @if (Context.Session.GetInt32("UserRoleId") != null && Context.Session.GetInt32("UserRoleId") > 1)
+                    {
+                        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.TaskId">Edit</a>
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.TaskId">Delete</a>
+                    }
                 </td>
             </tr>
         }

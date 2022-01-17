@@ -48,7 +48,13 @@ namespace CFProject.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            ViewData["ManagerId"] = new SelectList(_context.User, "UserId", "Name");
+            //Get all managers
+            var managers = from m in _context.User.Include(m => m.Manager).Include(m => m.Role) where m.RoleId > 1 select m;
+
+            List<SelectListItem> items = new SelectList(managers, "UserId", "Name").ToList();
+            items.Insert(0, (new SelectListItem { Text = "[None]", Value = "0" }));
+
+            ViewData["ManagerId"] = items;
             ViewData["RoleId"] = new SelectList(_context.Role, "RoleId", "RoleName");
             return View();
         }
@@ -62,6 +68,11 @@ namespace CFProject.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (user.ManagerId == 0)
+                {
+                    user.Manager = null;
+                    user.ManagerId = null;
+                }
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -35,11 +35,11 @@ namespace CFProject.Controllers
 
                 User user = loginUsers.ToList()[0];
 
-                HttpContext.Session.SetInt32("UserRoleId", user.Role.RoleId);
-
+                HttpContext.Session.SetInt32("UserRoleId", user.RoleId);
+                HttpContext.Session.SetString("Username", user.Name);
                 HttpContext.Session.SetInt32("UserId", user.UserId);
                 TempData["Login"] = "Success";
-                return RedirectToPage("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
             catch
             {
@@ -49,6 +49,18 @@ namespace CFProject.Controllers
 
         }
 
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("UserId");
+            HttpContext.Session.Remove("Username");
+            if (HttpContext.Session.GetInt32("UserIsAdmin") != null)
+            {
+                HttpContext.Session.Remove("UserIsAdmin");
+            }
+            TempData["Logout"] = "Success";
+            return RedirectToAction("Index", "Home");
+        }
 
 
         // GET: Login
@@ -71,6 +83,7 @@ namespace CFProject.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -17,7 +17,7 @@ namespace CFProject.Models
         public string Name { get; set; }
 
         [Column(TypeName = "nvarchar(100)")]
-        [Required(ErrorMessage = "Password invlaid")]
+        [Required(ErrorMessage = "Password invalid")]
         public string Password { get; set; }
 
         [ForeignKey("Manager")]
@@ -28,5 +28,7 @@ namespace CFProject.Models
         [Required(ErrorMessage = "Role missing")]
         public int RoleId { get; set; }
         public virtual Role Role { get; set; }
+
+
     }
 }
