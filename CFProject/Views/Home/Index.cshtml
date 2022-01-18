@@ -1,4 +1,7 @@
-﻿@{
+﻿@model IEnumerable<CFProject.Models.UserTask>
+@using Microsoft.AspNetCore.Http;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -21,5 +24,30 @@
     </div>
 }
 
+@if (Context.Session.GetInt32("UserId") != null)
+{
+    <hr />
+    <h2 class="text-center">My Projects</h2>
 
+    <div class="container d-flex flez-wrap justify-content-around">
+
+        @foreach (var project in Model)
+        {
+            <div class="card w-25 m3">
+                <div class="card-header">
+                    <h5>@project.Project.Title</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        @project.Project.Description
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="Projects" asp-route-id="@project.TaskId">Go to project details</a>
+                </div>
+            </div>
+        }
+
+    </div>
+}
 

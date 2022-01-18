@@ -1,4 +1,5 @@
-﻿@model CFProject.Models.Project
+﻿@model IEnumerable<CFProject.Models.UserTask>
+@using Microsoft.AspNetCore.Http;
 
 @{
     ViewData["Title"] = "Details";
@@ -9,28 +10,56 @@
 <div>
     <h4>Project</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Company)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Company.Name)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.TaskId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    @{
+        List<int> existingTasks = new List<int>();
+    }
+    @foreach (var project in Model)
+    {
+        if (!existingTasks.Contains(project.TaskId))
+        {
+            existingTasks.Add(project.TaskId);
+            if (project.TaskId == (int)TempData["ProjectId"])
+            {
+                <h2>
+                    @project.Project.Title
+                </h2>
+
+                <h5>
+                    Description
+                </h5>
+                <p>
+                    @project.Project.Description
+                </p>
+
+                <h5>
+                    Company
+                </h5>
+                <p>
+                    @project.Project.Company.Name
+                </p>
+
+                <h5>
+                    Programmers
+                </h5>
+                @foreach (var programmer in Model)
+                {
+                    if (programmer.TaskId == project.Project.TaskId)
+                    {
+                        <p>
+                            @programmer.User.Name
+
+                        </p>
+                    }
+                }
+                <div>
+                    @if (Context.Session.GetInt32("UserRoleId") > 1)
+                    {
+                        <a asp-action="Edit" asp-route-id="@project.Project.TaskId">Edit</a>
+                    }
+                    | <a asp-action="Index">Back to List</a>
+                </div>
+            }
+        }
+    }
+    </div>
+

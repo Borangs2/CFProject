@@ -83,16 +83,16 @@ namespace CFProject.Controllers
 
 
         // GET: Admin/Delete/5
-        [BindProperty]
-        public int TaskId { get; set; }
-        [BindProperty]
-        public int UserId { get; set; }
+       
         public async Task<IActionResult> Delete()
         {
+            int userId = Convert.ToInt32(Request.Form["UserId"]);
+            int taskId = Convert.ToInt32(Request.Form["TaskId"]);
+
             var userTask = await _context.UserTask
                 .Include(u => u.Project)
                 .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.TaskId == TaskId && m.UserId == UserId);
+                .FirstOrDefaultAsync(m => m.TaskId == taskId && m.UserId == userId);
             if (userTask == null)
             {
                 return NotFound();
@@ -101,6 +101,10 @@ namespace CFProject.Controllers
             return View(userTask);
         }
 
+        [BindProperty]
+        public int TaskId { get; set; }
+        [BindProperty]
+        public int UserId { get; set; }
         // POST: Admin/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

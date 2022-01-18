@@ -64,19 +64,22 @@
                                 <ul class="list-unstyled m-0 p-0">
                                     @foreach (var programmer in Model)
                                     {
-                                        <li>
-                                            @programmer.User.Name
-                                        </li>
+                                        if (programmer.TaskId == item.TaskId)
+                                        {
+                                            <li>
+                                                @programmer.User.Name
+                                            </li>
+                                        }
                                     }
                                 </ul>
 
                             </td>
                             <td>
-                                @*<form asp-action="GoToDelete" asp-controller="Admin">
-                                        <input type="hidden" asp-for="TaskId" value="@item.TaskId" />
-                                        <input type="hidden" asp-for="UserId" value="@item.UserId" />
+                                <form asp-action="GoToDelete" asp-controller="Admin">
+                                        <input type="hidden" name="TaskId" value="@item.TaskId" />
+                                        <input type="hidden" name="UserId" value="@item.UserId" />
                                         <button class="btn btn-outline-danger" type="submit">Delete</button>
-                                    </form>*@
+                                    </form>
                             </td>
                         </tr>
                     }

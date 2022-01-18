@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CFProject.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace CFProject.Controllers
 {
@@ -19,10 +20,11 @@ namespace CFProject.Controllers
         }
 
         // GET: Projects
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var taskContext = _context.UserTask.Include(p => p.Project).Include(p => p.Project.Company).Include(p => p.User);
-            return View(await taskContext.ToListAsync());
+            
+            return View(taskContext.ToList());
         }
 
         public IActionResult Search()
@@ -35,22 +37,23 @@ namespace CFProject.Controllers
         }
 
         // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var project = await _context.Project
-                .Include(p => p.Company)
-                .FirstOrDefaultAsync(m => m.TaskId == id);
+            var project = _context.UserTask
+                .Include(p => p.Project)
+                .Include(p => p.Project.Company)
+                .Include(p => p.User);
             if (project == null)
             {
                 return NotFound();
             }
-
-            return View(project);
+            TempData["ProjectId"] = id;
+            return View(project.ToList());
         }
 
         // GET: Projects/Create
