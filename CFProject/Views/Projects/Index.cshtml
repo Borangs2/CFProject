@@ -1,11 +1,11 @@
-﻿@model IEnumerable<CFProject.Models.Project>
+﻿@model IEnumerable<CFProject.Models.UserTask>
 @using Microsoft.AspNetCore.Http;
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="text-center w-100 mb-3">Projects</h1>
 
 @if (Context.Session.GetInt32("UserRoleId") != null && Context.Session.GetInt32("UserRoleId") > 1)
 {
@@ -15,44 +15,55 @@
 }
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Company)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+<div class="container d-flex flex-wrap justify-content-between">
+    @{
+        List<int> existingTasks = new List<int>();
+    }
+    @foreach (var project in Model)
+    {
+        if (!existingTasks.Contains(project.TaskId))
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td class="w-50">
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Company.Name)
-                </td>
-                <td>
-                    <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.TaskId">Details</a>
+            existingTasks.Add(project.TaskId);
 
-                    @if (Context.Session.GetInt32("UserRoleId") != null && Context.Session.GetInt32("UserRoleId") > 1)
-                    {
-                        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.TaskId">Edit</a>
-                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.TaskId">Delete</a>
-                    }
-                </td>
-            </tr>
+            <div class="card w-50 border-dark">
+                <div class="card-header">
+                    <h4>@project.Project.Title</h4>
+                </div>
+
+                <div class="card-body">
+                    <p>@project.Project.Description</p>
+
+                    <hr />
+
+                    <div class="float-left w-50">
+                        <div class="card-header">
+                            <h5>Company</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                @project.Project.Company.Name
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="float-right w-50">
+                        <div class="card-header">
+                            <h5>
+                                Assigned programmers
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @foreach (var programmer in Model)
+                            {
+                                <p class="font-weight-bold">
+                                    @programmer.User.Name
+                                </p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         }
-    </tbody>
-</table>
+    }
+</div>

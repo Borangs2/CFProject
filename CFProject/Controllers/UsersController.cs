@@ -25,6 +25,16 @@ namespace CFProject.Controllers
             return View(await taskContext.ToListAsync());
         }
 
+        public IActionResult Search()
+        {
+            string searchTerm = Request.Form["SearchTerm"];
+            var searchResults = from u in _context.User.Include(u => u.Manager).Include(u => u.Role)
+                                where u.Name.Contains(searchTerm)
+                                select u;
+            return View("Index", searchResults);
+        }
+
+
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {

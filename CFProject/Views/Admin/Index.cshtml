@@ -1,0 +1,91 @@
+﻿@model IEnumerable<CFProject.Models.UserTask>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h1>Index</h1>
+
+<div>
+
+    <div class="btn btn-outline-info ">
+        <a class="text-info text-decoration-none" asp-action="Create" asp-controller="Users">Create New Programmer</a>
+    </div>
+
+    <div class="btn btn-outline-info">
+        <a class="text-info text-decoration-none" asp-action="Create" asp-controller="Projects">Create New Project</a>
+    </div>
+
+    <div class="btn btn-outline-primary">
+        <a class="text-Primary text-decoration-none" asp-action="Create" asp-controller="Admin">Asign programmer to project</a>
+    </div>
+
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(modelItem => modelItem.Project.Title)
+                    </td>
+                    <td class="w-50">
+                        @Html.DisplayNameFor(modelItem => modelItem.Project.Description)
+                    </td>
+                    <td>
+                        Company
+                    </td>
+                    <td>
+                        Assigned Programmers
+                    </td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    List<int> existingTasks = new List<int>();
+                }
+                @foreach (var item in Model)
+                {
+                    if (!existingTasks.Contains(item.TaskId))
+                    {
+                        existingTasks.Add(item.TaskId);
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Project.Title)
+                            </td>
+                            <td class="w-50">
+                                @Html.DisplayFor(modelItem => item.Project.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Project.Company.Name)
+                            </td>
+                            <td>
+
+                                <ul class="list-unstyled m-0 p-0">
+                                    @foreach (var programmer in Model)
+                                    {
+                                        <li>
+                                            @programmer.User.Name
+                                        </li>
+                                    }
+                                </ul>
+
+                            </td>
+                            <td>
+                                @*<form asp-action="GoToDelete" asp-controller="Admin">
+                                        <input type="hidden" asp-for="TaskId" value="@item.TaskId" />
+                                        <input type="hidden" asp-for="UserId" value="@item.UserId" />
+                                        <button class="btn btn-outline-danger" type="submit">Delete</button>
+                                    </form>*@
+                            </td>
+                        </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>

@@ -21,8 +21,17 @@ namespace CFProject.Controllers
         // GET: Projects
         public async Task<IActionResult> Index()
         {
-            var taskContext = _context.Project.Include(p => p.Company);
+            var taskContext = _context.UserTask.Include(p => p.Project).Include(p => p.Project.Company).Include(p => p.User);
             return View(await taskContext.ToListAsync());
+        }
+
+        public IActionResult Search()
+        {
+            string searchTerm = Request.Form["SearchTerm"];
+            var searchResults = from p in _context.UserTask.Include(b => b.Project).Include(p => p.Project.Company).Include(p => p.User) 
+                                where p.Project.Title.Contains(searchTerm) 
+                                select p;
+            return View("Index", searchResults.ToList());
         }
 
         // GET: Projects/Details/5

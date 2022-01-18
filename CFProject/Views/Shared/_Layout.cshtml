@@ -29,9 +29,22 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
                         </li>
+                        @if (Context.Session.GetInt32("UserRoleId") != null && Context.Session.GetInt32("UserRoleId") > 1)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Manager</a>
+                            </li>
+                        }
 
 
                     </ul>
+
+                    <div>
+                        <form class="search" asp-action="Search">
+                            <input name="SearchTerm" type="search" placeholder="Search ..." autocomplete="off" class="rounded border-dark p-1 mx-5 "/>
+                        </form>
+                    </div>
+
                     @if (Context.Session.GetInt32("UserId") == null)
                     {
                         <div class="nav-item">

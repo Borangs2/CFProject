@@ -1,5 +1,6 @@
 ﻿using CFProject.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,16 +12,17 @@ namespace CFProject.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly TaskContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(TaskContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var projects = _context.UserTask.Include(p => p.User).Include(p => p.Project);
+            return View(projects.ToList());
         }
 
         public IActionResult Privacy()
