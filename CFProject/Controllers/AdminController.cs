@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CFProject.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace CFProject.Controllers
 {
@@ -21,6 +22,10 @@ namespace CFProject.Controllers
         // GET: Admin
         public IActionResult Index()
         {
+            if(HttpContext.Session.GetInt32("UserId") == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             var taskContext = _context.UserTask.Include(u => u.Project).Include(u => u.User).Include(u => u.Project.Company).ToList();
             return View(taskContext);
         }
@@ -34,29 +39,14 @@ namespace CFProject.Controllers
             return View("Index", searchResults.ToList());
         }
 
-        // GET: Admin/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var userTask = await _context.UserTask
-                .Include(u => u.Project)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (userTask == null)
-            {
-                return NotFound();
-            }
-
-            return View(userTask);
-        }
 
         // GET: Admin/Create
         public IActionResult Create()
         {
+            if (HttpContext.Session.GetInt32("UserId") == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             ViewData["TaskId"] = new SelectList(_context.Project, "TaskId", "Title");
             ViewData["UserId"] = new SelectList(_context.User, "UserId", "Name");
             return View();
@@ -84,36 +74,60 @@ namespace CFProject.Controllers
 
         // GET: Admin/Delete/5
        
-        public async Task<IActionResult> Delete()
+        public IActionResult GoToDelete()
         {
+            if (HttpContext.Session.GetInt32("UserId") == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             int userId = Convert.ToInt32(Request.Form["UserId"]);
             int taskId = Convert.ToInt32(Request.Form["TaskId"]);
 
-            var userTask = await _context.UserTask
+            var userTask = _context.UserTask
                 .Include(u => u.Project)
                 .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.TaskId == taskId && m.UserId == userId);
+                .Where(u => u.TaskId == taskId);
+
             if (userTask == null)
             {
                 return NotFound();
             }
 
-            return View(userTask);
+            return View("Delete", userTask.ToList());
         }
 
-        [BindProperty]
-        public int TaskId { get; set; }
-        [BindProperty]
-        public int UserId { get; set; }
+
         // POST: Admin/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed()
         {
-            var userTask = await _context.UserTask.FindAsync(TaskId, UserId);
+            int userId = Convert.ToInt32(Request.Form["UserId"]);
+            int taskId = Convert.ToInt32(Request.Form["TaskId"]);
+            var userTask = await _context.UserTask.FindAsync(taskId, userId);
             _context.UserTask.Remove(userTask);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult RemoveFromTask()
+        {
+            int userId = Convert.ToInt32(Request.Form["UserId"]);
+            int taskId = Convert.ToInt32(Request.Form["TaskId"]);
+
+            var connection = _context.UserTask.Find(userId, taskId);
+            if(connection == null)
+            {
+                TempData["RemoveConnection"] = "NotFound";
+                return View("Delete");
+            }
+
+            _context.UserTask.Remove(connection);
+            User user = _context.User.Find(userId);
+            TempData["Username"] = user.Name;
+            _context.SaveChanges();
+            TempData["RemoveConnection"] = "Success";
+            return RedirectToAction("GoToDelete");
         }
 
         private bool UserTaskExists(int id)
