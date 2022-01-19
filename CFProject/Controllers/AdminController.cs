@@ -22,10 +22,6 @@ namespace CFProject.Controllers
         // GET: Admin
         public IActionResult Index()
         {
-            if(HttpContext.Session.GetInt32("UserId") == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
             var taskContext = _context.UserTask.Include(u => u.Project).Include(u => u.User).Include(u => u.Project.Company).ToList();
             return View(taskContext);
         }
@@ -39,14 +35,10 @@ namespace CFProject.Controllers
             return View("Index", searchResults.ToList());
         }
 
-
+        
         // GET: Admin/Create
         public IActionResult Create()
         {
-            if (HttpContext.Session.GetInt32("UserId") == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
             ViewData["TaskId"] = new SelectList(_context.Project, "TaskId", "Title");
             ViewData["UserId"] = new SelectList(_context.User, "UserId", "Name");
             return View();
@@ -76,10 +68,6 @@ namespace CFProject.Controllers
        
         public IActionResult GoToDelete()
         {
-            if (HttpContext.Session.GetInt32("UserId") == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
             int userId = Convert.ToInt32(Request.Form["UserId"]);
             int taskId = Convert.ToInt32(Request.Form["TaskId"]);
 
