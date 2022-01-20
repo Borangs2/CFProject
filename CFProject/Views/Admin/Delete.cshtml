@@ -66,8 +66,8 @@
 
 
         <form asp-action="Delete">
-            <input type="hidden" name="UserId" />
-            <input type="hidden" name="TaskId" />
+            <input type="hidden" name="UserId" value="@project.UserId"/>
+            <input type="hidden" name="TaskId" value="@project.TaskId"/>
             <button type="submit" value="Delete" class="btn btn-danger">Delete all connections</button> |
             <a class="btn btn-outline-info" asp-action="Index">Back to List</a>
         </form>
