@@ -50,8 +50,8 @@
                         </div>
                         <div class="w-50">
                             <form asp-action="RemoveFromTask" asp-controller="Admin">
-                                <input type="hidden" name="UserId" value="@programmer.UserId" />
-                                <input type="hidden" name="TaskId" value="@programmer.TaskId" />
+                                <input type="hidden" name="UserId" value="@programmer.UserId" @*asp-route-userId="@programmer.UserId"*@ />
+                                <input type="hidden" name="TaskId" value="@programmer.TaskId" @*asp-route-taskId="@programmer.TaskId"*@ />
                                 <button class="btn btn-outline-danger" type="submit">Remove</button>
                             </form>
 
@@ -66,11 +66,11 @@
 
 
         <form asp-action="Delete">
-            <input type="hidden" name="UserId" value="@project.UserId"/>
-            <input type="hidden" name="TaskId" value="@project.TaskId"/>
-            <button type="submit" value="Delete" class="btn btn-danger">Delete all connections</button> |
-            <a class="btn btn-outline-info" asp-action="Index">Back to List</a>
+            <input type="hidden" name="TaskId" value="@project.TaskId" />
+            <button type="submit" class="btn btn-danger">Delete all connections</button> |
         </form>
+        <a class="btn btn-outline-info" asp-action="Index">Back to List</a>
+
 
     }
 }

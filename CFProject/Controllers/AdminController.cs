@@ -51,25 +51,39 @@ namespace CFProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserId,TaskId")] UserTask userTask)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(userTask);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(userTask);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["TaskId"] = new SelectList(_context.Project, "TaskId", "Title", userTask.TaskId);
+                ViewData["UserId"] = new SelectList(_context.User, "UserId", "Name", userTask.UserId);
+                return View(userTask);
             }
-            ViewData["TaskId"] = new SelectList(_context.Project, "TaskId", "Title", userTask.TaskId);
-            ViewData["UserId"] = new SelectList(_context.User, "UserId", "Name", userTask.UserId);
-            return View(userTask);
+            catch
+            {
+                TempData["Create"] = "Error";
+                return View(userTask);
+            }
+            
         }
 
 
 
         // GET: Admin/Delete/5
        
-        public IActionResult GoToDelete()
+        public IActionResult GoToDelete(int? userId, int? taskId)
         {
-            int userId = Convert.ToInt32(Request.Form["UserId"]);
-            int taskId = Convert.ToInt32(Request.Form["TaskId"]);
+            //int userId = Convert.ToInt32(Request.Form["UserId"]);
+            //int taskId = Convert.ToInt32(Request.Form["TaskId"]);
+
+            if(TempData["TaskId"] != null)
+            {
+                taskId = (int)TempData["TaskId"];
+            }
 
             var userTask = _context.UserTask
                 .Include(u => u.Project)
@@ -86,19 +100,25 @@ namespace CFProject.Controllers
 
 
         // POST: Admin/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed()
+        public async Task<IActionResult> Delete()
         {
-            int userId = Convert.ToInt32(Request.Form["UserId"]);
             int taskId = Convert.ToInt32(Request.Form["TaskId"]);
-            var userTask = await _context.UserTask.FindAsync(taskId, userId);
-            _context.UserTask.Remove(userTask);
+
+            var deleteAll = from d in _context.UserTask 
+                            where d.TaskId == taskId 
+                            select d;
+
+            foreach(var project in deleteAll)
+            {
+                _context.UserTask.Remove(project);
+            }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult RemoveFromTask()
+        public IActionResult RemoveFromTask(/*int? userId, int? taskId*/)
         {
             int userId = Convert.ToInt32(Request.Form["UserId"]);
             int taskId = Convert.ToInt32(Request.Form["TaskId"]);
@@ -115,6 +135,7 @@ namespace CFProject.Controllers
             TempData["Username"] = user.Name;
             _context.SaveChanges();
             TempData["RemoveConnection"] = "Success";
+            TempData["TaskId"] = taskId;
             return RedirectToAction("GoToDelete");
         }
 
