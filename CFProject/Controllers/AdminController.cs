@@ -77,9 +77,6 @@ namespace CFProject.Controllers
        
         public IActionResult GoToDelete(int? userId, int? taskId)
         {
-            //int userId = Convert.ToInt32(Request.Form["UserId"]);
-            //int taskId = Convert.ToInt32(Request.Form["TaskId"]);
-
             if(TempData["TaskId"] != null)
             {
                 taskId = (int)TempData["TaskId"];
@@ -118,7 +115,7 @@ namespace CFProject.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult RemoveFromTask(/*int? userId, int? taskId*/)
+        public IActionResult RemoveFromTask()
         {
             int userId = Convert.ToInt32(Request.Form["UserId"]);
             int taskId = Convert.ToInt32(Request.Form["TaskId"]);
