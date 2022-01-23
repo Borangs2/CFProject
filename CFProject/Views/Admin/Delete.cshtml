@@ -50,8 +50,8 @@
                         </div>
                         <div class="w-50">
                             <form asp-action="RemoveFromTask" asp-controller="Admin">
-                                <input type="hidden" name="UserId" value="@programmer.UserId" @*asp-route-userId="@programmer.UserId"*@ />
-                                <input type="hidden" name="TaskId" value="@programmer.TaskId" @*asp-route-taskId="@programmer.TaskId"*@ />
+                                <input type="hidden" name="UserId" value="@programmer.UserId" />
+                                <input type="hidden" name="TaskId" value="@programmer.TaskId" />
                                 <button class="btn btn-outline-danger" type="submit">Remove</button>
                             </form>
 
